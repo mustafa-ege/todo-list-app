@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import TaskForm from './components/TaskForm'
+import TaskList from './components/TaskList'
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
@@ -8,6 +10,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch all tasks from the database
   const fetchTasks = async () => {
     try {
       setLoading(true);
@@ -26,10 +29,12 @@ function App() {
     }
   };
 
+  // Load tasks when component mounts
   useEffect(() => {
     fetchTasks();
   }, []);
 
+  // Add a new task to the database
   const addTask = async (title) => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks`, {
@@ -45,7 +50,7 @@ function App() {
       }
 
       const newTask = await response.json();
-      setTasks([newTask, ...tasks]);
+      setTasks([newTask, ...tasks]); // Add to beginning of list
       setError(null);
     } catch (err) {
       setError('Failed to add task. Please try again.');
@@ -53,6 +58,7 @@ function App() {
     }
   };
 
+  // Delete a task from the database
   const deleteTask = async (taskId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
@@ -71,9 +77,21 @@ function App() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="app">
+        <h1>Todo List</h1>
+        <div className="loading">Loading tasks...</div>
+      </div>
+    );
+  }
 
   return (
-    <div >
+    <div className="app">
+      <h1>Todo List</h1>
+      {error && <div className="error-message">{error}</div>}
+      <TaskForm onAddTask={addTask} />
+      <TaskList tasks={tasks} onDeleteTask={deleteTask} />
     </div>
   )
 }
