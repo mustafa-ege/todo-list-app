@@ -55,6 +55,32 @@ function App() {
     }
   };
 
+  const updateTask = async (taskId, updatedData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update task');
+      }
+
+      const updatedTask = await response.json();
+      setTasks(tasks.map(task => 
+        task.id === taskId ? updatedTask : task
+      ));
+      setError(null);
+    } catch (err) {
+      setError('Failed to update task. Please try again.');
+      console.error('Error updating task:', err);
+    }
+  };
+
+
   const deleteTask = async (taskId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
@@ -87,7 +113,7 @@ function App() {
       <h1>Todo List</h1>
       {error && <div className="error-message">{error}</div>}
       <TaskForm onAddTask={addTask} />
-      <TaskList tasks={tasks} onDeleteTask={deleteTask} />
+      <TaskList tasks={tasks} onDeleteTask={deleteTask} onUpdateTask={updateTask} />
     </div>
   )
 }
