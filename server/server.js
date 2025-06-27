@@ -30,6 +30,8 @@ function createTable() {
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
+            description TEXT,
+            status TEXT DEFAULT 'to-do',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     `;
@@ -60,15 +62,16 @@ app.get('/api/tasks', (req, res) => {
 
 // POST new task
 app.post('/api/tasks', (req, res) => {
-    const { title } = req.body;
+    const { title, description, status } = req.body;
     
     if (!title || title.trim() === '') {
         return res.status(400).json({ error: 'Task title is required' });
     }
     
-    const sql = 'INSERT INTO tasks (title) VALUES (?)';
+    const sql = 'INSERT INTO tasks (title, description, status) VALUES (?, ?, ?)';
+    const statusValue = status || 'to-do';
     
-    db.run(sql, [title.trim()], function(err) {
+    db.run(sql, [title.trim(), description || '', statusValue], function(err) {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
