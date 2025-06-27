@@ -10,7 +10,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch all tasks from the database
   const fetchTasks = async () => {
     try {
       setLoading(true);
@@ -29,20 +28,18 @@ function App() {
     }
   };
 
-  // Load tasks when component mounts
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  // Add a new task to the database
-  const addTask = async (title) => {
+  const addTask = async (taskData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify(taskData),
       });
 
       if (!response.ok) {
@@ -50,7 +47,7 @@ function App() {
       }
 
       const newTask = await response.json();
-      setTasks([newTask, ...tasks]); // Add to beginning of list
+      setTasks([newTask, ...tasks]); 
       setError(null);
     } catch (err) {
       setError('Failed to add task. Please try again.');
@@ -58,7 +55,6 @@ function App() {
     }
   };
 
-  // Delete a task from the database
   const deleteTask = async (taskId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {

@@ -40,3 +40,285 @@
 .read-the-docs {
   color: #888;
 }
+
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.app h1 {
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.loading {
+  font-size: 18px;
+  color: #666;
+  margin: 20px 0;
+}
+
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 10px 0;
+  border: 1px solid #ffcdd2;
+}
+
+/* Form Styles */
+.todo-form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.todo-form input,
+.todo-form textarea,
+.todo-form select {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.todo-form input:focus,
+.todo-form textarea:focus,
+.todo-form select:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.todo-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.todo-form select {
+  background-color: white;
+}
+
+.todo-form button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.todo-form button:hover {
+  background-color: #1976d2;
+}
+
+/* Task List Styles */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Task Item Styles */
+.task-item {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.task-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.task-content {
+  flex: 1;
+  text-align: left;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.task-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.status-select {
+  color: black;
+}
+
+.task-description {
+  color: #666;
+  margin: 0;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.edit-btn {
+  background-color: #ff9800;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #f57c00;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Editing Styles */
+.task-item.editing {
+  background-color: #f5f5f5;
+}
+
+.edit-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.edit-title,
+.edit-description,
+.edit-status {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.edit-title:focus,
+.edit-description:focus,
+.edit-status:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.edit-description {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.edit-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.save-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #388e3c;
+}
+
+.cancel-btn {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #757575;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .app {
+    padding: 10px;
+  }
+  
+  .task-item {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .task-actions {
+    margin-left: 0;
+    justify-content: flex-end;
+  }
+  
+  .task-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .todo-form {
+    padding: 15px;
+  }
+}
