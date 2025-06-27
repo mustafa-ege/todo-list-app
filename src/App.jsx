@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import TaskForm from './components/TaskForm'
 import TaskList from './components/TaskList'
+import SearchBar from './components/SearchBar'
 
 const API_BASE_URL = 'http://localhost:5000/api';
 
 function App() {
   const [tasks, setTasks] = useState([]);
+  const [filteredTasks, setFilteredTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,6 +21,7 @@ function App() {
       }
       const data = await response.json();
       setTasks(data);
+      setFilteredTasks(data);
       setError(null);
     } catch (err) {
       setError('Failed to load tasks. Please check if the server is running.');
@@ -31,6 +34,22 @@ function App() {
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setFilteredTasks(tasks);
+      return;
+    }
+
+    const filtered = tasks.filter(task => {
+      const titleMatch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
+      const descriptionMatch = task.description && 
+        task.description.toLowerCase().includes(searchTerm.toLowerCase());
+      return titleMatch || descriptionMatch;
+    });
+
+    setFilteredTasks(filtered);
+  };
 
   const addTask = async (taskData) => {
     try {
@@ -47,7 +66,9 @@ function App() {
       }
 
       const newTask = await response.json();
-      setTasks([newTask, ...tasks]); 
+      const updatedTasks = [newTask, ...tasks];
+      setTasks(updatedTasks);
+      setFilteredTasks(updatedTasks);
       setError(null);
     } catch (err) {
       setError('Failed to add task. Please try again.');
@@ -70,16 +91,17 @@ function App() {
       }
 
       const updatedTask = await response.json();
-      setTasks(tasks.map(task => 
+      const updatedTasks = tasks.map(task => 
         task.id === taskId ? updatedTask : task
-      ));
+      );
+      setTasks(updatedTasks);
+      setFilteredTasks(updatedTasks);
       setError(null);
     } catch (err) {
       setError('Failed to update task. Please try again.');
       console.error('Error updating task:', err);
     }
   };
-
 
   const deleteTask = async (taskId) => {
     try {
@@ -91,7 +113,9 @@ function App() {
         throw new Error('Failed to delete task');
       }
 
-      setTasks(tasks.filter(task => task.id !== taskId));
+      const updatedTasks = tasks.filter(task => task.id !== taskId);
+      setTasks(updatedTasks);
+      setFilteredTasks(updatedTasks);
       setError(null);
     } catch (err) {
       setError('Failed to delete task. Please try again.');
@@ -113,7 +137,8 @@ function App() {
       <h1>Todo List</h1>
       {error && <div className="error-message">{error}</div>}
       <TaskForm onAddTask={addTask} />
-      <TaskList tasks={tasks} onDeleteTask={deleteTask} onUpdateTask={updateTask} />
+      <SearchBar onSearch={handleSearch} />
+      <TaskList tasks={filteredTasks} onDeleteTask={deleteTask} onUpdateTask={updateTask} />
     </div>
   )
 }
