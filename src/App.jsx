@@ -45,7 +45,14 @@ function App() {
       const titleMatch = task.title.toLowerCase().includes(searchTerm.toLowerCase());
       const descriptionMatch = task.description && 
         task.description.toLowerCase().includes(searchTerm.toLowerCase());
-      return titleMatch || descriptionMatch;
+      
+      // Also search in subtasks
+      const subtaskMatch = task.subtasks && task.subtasks.some(subtask => {
+        const subtaskTitleMatch = subtask.title.toLowerCase().includes(searchTerm.toLowerCase());
+        return subtaskTitleMatch;
+      });
+      
+      return titleMatch || descriptionMatch || subtaskMatch;
     });
 
     setFilteredTasks(filtered);
@@ -92,7 +99,7 @@ function App() {
 
       const updatedTask = await response.json();
       const updatedTasks = tasks.map(task => 
-        task.id === taskId ? updatedTask : task
+        task.id === taskId ? { ...task, ...updatedTask } : task
       );
       setTasks(updatedTasks);
       setFilteredTasks(updatedTasks);
@@ -123,6 +130,89 @@ function App() {
     }
   };
 
+  // Subtask management functions
+  const addSubtask = async (taskId, subtaskData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/subtasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(subtaskData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add subtask');
+      }
+
+      const newSubtask = await response.json();
+      const updatedTasks = tasks.map(task => 
+        task.id === taskId 
+          ? { ...task, subtasks: [...(task.subtasks || []), newSubtask] }
+          : task
+      );
+      setTasks(updatedTasks);
+      setFilteredTasks(updatedTasks);
+      setError(null);
+    } catch (err) {
+      setError('Failed to add subtask. Please try again.');
+      console.error('Error adding subtask:', err);
+    }
+  };
+
+  const updateSubtask = async (subtaskId, updatedData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/subtasks/${subtaskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update subtask');
+      }
+
+      const updatedSubtask = await response.json();
+      const updatedTasks = tasks.map(task => ({
+        ...task,
+        subtasks: task.subtasks?.map(subtask => 
+          subtask.id === subtaskId ? updatedSubtask : subtask
+        ) || []
+      }));
+      setTasks(updatedTasks);
+      setFilteredTasks(updatedTasks);
+      setError(null);
+    } catch (err) {
+      setError('Failed to update subtask. Please try again.');
+      console.error('Error updating subtask:', err);
+    }
+  };
+
+  const deleteSubtask = async (subtaskId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/subtasks/${subtaskId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete subtask');
+      }
+
+      const updatedTasks = tasks.map(task => ({
+        ...task,
+        subtasks: task.subtasks?.filter(subtask => subtask.id !== subtaskId) || []
+      }));
+      setTasks(updatedTasks);
+      setFilteredTasks(updatedTasks);
+      setError(null);
+    } catch (err) {
+      setError('Failed to delete subtask. Please try again.');
+      console.error('Error deleting subtask:', err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="app">
@@ -138,7 +228,14 @@ function App() {
       {error && <div className="error-message">{error}</div>}
       <TaskForm onAddTask={addTask} />
       <SearchBar onSearch={handleSearch} />
-      <TaskList tasks={filteredTasks} onDeleteTask={deleteTask} onUpdateTask={updateTask} />
+      <TaskList 
+        tasks={filteredTasks} 
+        onDeleteTask={deleteTask} 
+        onUpdateTask={updateTask}
+        onAddSubtask={addSubtask}
+        onDeleteSubtask={deleteSubtask}
+        onUpdateSubtask={updateSubtask}
+      />
     </div>
   )
 }

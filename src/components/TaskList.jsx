@@ -1,6 +1,6 @@
 import TaskItem from './TaskItem';
 
-const TaskList = ({ tasks, onDeleteTask, onUpdateTask }) => {
+const TaskList = ({ tasks, onDeleteTask, onUpdateTask, onAddSubtask, onDeleteSubtask, onUpdateSubtask }) => {
     if (tasks.length === 0) {
         return <div className="no-tasks">No tasks yet.</div>;
     }
@@ -13,6 +13,9 @@ const TaskList = ({ tasks, onDeleteTask, onUpdateTask }) => {
                     task={task} 
                     onDeleteTask={onDeleteTask}
                     onUpdateTask={onUpdateTask}
+                    onAddSubtask={onAddSubtask}
+                    onDeleteSubtask={onDeleteSubtask}
+                    onUpdateSubtask={onUpdateSubtask}
                 />
             ))}
         </div>

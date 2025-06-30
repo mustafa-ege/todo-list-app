@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import SubtaskForm from './SubtaskForm';
+import SubtaskItem from './SubtaskItem';
 
-const TaskItem = ({ task, onDeleteTask, onUpdateTask }) => {
+const TaskItem = ({ task, onDeleteTask, onUpdateTask, onAddSubtask, onDeleteSubtask, onUpdateSubtask }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({
         title: task.title,
@@ -120,6 +122,33 @@ const TaskItem = ({ task, onDeleteTask, onUpdateTask }) => {
                 >
                     Delete
                 </button>
+            </div>
+            
+            {/* Subtasks Section */}
+            <div className="subtasks-section">
+                <div className="subtasks-header">
+                    <h4>Subtasks ({task.subtasks?.length || 0})</h4>
+                </div>
+                
+                {/* Subtasks List */}
+                {task.subtasks && task.subtasks.length > 0 && (
+                    <div className="subtasks-list">
+                        {task.subtasks.map(subtask => (
+                            <SubtaskItem 
+                                key={subtask.id} 
+                                subtask={subtask} 
+                                onDeleteSubtask={onDeleteSubtask}
+                                onUpdateSubtask={onUpdateSubtask}
+                            />
+                        ))}
+                    </div>
+                )}
+                
+                {/* Add Subtask Form */}
+                <SubtaskForm 
+                    onAddSubtask={onAddSubtask}
+                    taskId={task.id}
+                />
             </div>
         </div>
     );
